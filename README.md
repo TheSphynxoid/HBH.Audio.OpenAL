@@ -1,2 +1,2 @@
 # HBH.Audio.OpenAL
-A OpenAL Wrapper for .NET
+A OpenAL Soft Wrapper for .NET
