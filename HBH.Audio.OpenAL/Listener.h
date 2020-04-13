@@ -1,5 +1,5 @@
 #pragma once
-
+#define AL_METERS_PER_UNIT 0x20004
 
 namespace HBH {
 	namespace Audio {
@@ -14,7 +14,7 @@ namespace HBH {
 				}
 			internal:
 				float* ToFloatPtr() {
-					float f[6];
+					float* f = new float[6]();
 					f[0] = v1.x;
 					f[1] = v1.y;
 					f[2] = v1.z;
@@ -129,6 +129,17 @@ namespace HBH {
 					void set(float value) {
 						m_speedofsound = value;
 						alSpeedOfSound(value);
+					}
+				}
+				static property float MetersPerUnit
+				{
+					float get() {
+						float f;
+						alGetListenerf(AL_METERS_PER_UNIT, &f);
+						return f;
+					}
+					void set(float value) {
+						alListenerf(AL_METERS_PER_UNIT, value);
 					}
 				}
 			private:

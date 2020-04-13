@@ -126,11 +126,16 @@ namespace HBH.Audio.IO
         }
         public static DATAChunk ReadData(Stream file)
         {
-            file.Position = 15;
+            file.Position = 36;
             DATAChunk data = new DATAChunk();
             byte[] b = new byte[4];
             file.Read(b, 0, 4);
             char[] id = Encoding.ASCII.GetChars(b);
+            if(Encoding.ASCII.GetString(b) != "data")
+            {
+                file.Read(b, 0, 4);
+                id = Encoding.ASCII.GetChars(b);
+            }
             data.ID = id;
             file.Read(b, 0, 4);
             data.Size = BitConverter.ToInt32(b, 0);
@@ -148,7 +153,7 @@ namespace HBH.Audio.IO
             file.Read(b, 0, 4);
             var Size = BitConverter.ToInt32(b, 0);
             channels = new DATAChunk[fmt.NumChannels];
-            var buf = new Byte[fmt.BitsPerSample / 8];
+            var buf = new byte[fmt.BitsPerSample / 8];
             for (int i = 0; i < fmt.NumChannels; i++)
             {
                 channels[i].Data = new byte[Size / fmt.NumChannels];

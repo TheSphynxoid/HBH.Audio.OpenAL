@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "Device.h"
+
+#define ALC_MAX_AUXILIARY_SENDS 0x20003
 namespace HBH {
 	namespace Audio {
 		namespace OpenAL {
@@ -11,6 +13,7 @@ namespace HBH {
 				Refresh = ALC_REFRESH,
 				StereoSources = ALC_STEREO_SOURCES,
 				Sync = ALC_SYNC,
+				Ext_MaxAuxilarySends = ALC_MAX_AUXILIARY_SENDS,
 				None = 0
 			};
 			//Not Finished

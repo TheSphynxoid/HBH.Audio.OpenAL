@@ -28,7 +28,7 @@ System::String^ HBH::Audio::OpenAL::Vector::ToString()
 
 ALfloat* HBH::Audio::OpenAL::Vector::ToALfloatPtr()
 {
-	ALfloat fs[3];
+	ALfloat* fs = new ALfloat[3]();
 	fs[0] = x;
 	fs[1] = y;
 	fs[2] = z;
@@ -37,5 +37,6 @@ ALfloat* HBH::Audio::OpenAL::Vector::ToALfloatPtr()
 
 HBH::Audio::OpenAL::Vector HBH::Audio::OpenAL::Vector::FromFloatPtr(float* f)
 {
+	if (f[0] && f[1] && f[2])return Empty;
 	return Vector(f[0], f[1], f[2]);
 }

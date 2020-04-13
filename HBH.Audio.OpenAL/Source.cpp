@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "Source.h"
 #include "Buffer.h"
+#include "Extension.h"
 using namespace System;
+
+void HBH::Audio::OpenAL::Source::SetAuxiliarySend(AuxiliaryEffectSlot^ effect, int SendNumber)
+{
+	alSource3i(srcname, AL_AUXILIARY_SEND_FILTER, effect->slot, SendNumber, AL_FILTER_NULL);
+}
 
 HBH::Audio::OpenAL::Source::Source(unsigned int src)
 {
@@ -102,6 +108,14 @@ void HBH::Audio::OpenAL::Source::QueueBuffers(unsigned int number, array<Buffer^
 		bufs[i] = buf[i]->Buffername;
 	}
 	alSourceQueueBuffers(srcname, number, bufs);
+	auto ex = Error::GetException(Error::GetError());
+	if (ex != nullptr)throw ex;
+}
+
+void HBH::Audio::OpenAL::Source::QueueBuffer(Buffer^ buf)
+{
+	ALuint ui = buf->Buffername;
+	alSourceQueueBuffers(srcname, 1, &ui);
 	auto ex = Error::GetException(Error::GetError());
 	if (ex != nullptr)throw ex;
 }

@@ -9,7 +9,7 @@ namespace HBH {
 				Vector(float X, float Y, float Z);
 				void Add(int i);
 				System::String^ ToString() override;
-				static initonly Vector empty = Vector(0,0,0);
+				static initonly Vector Empty = Vector(0,0,0);
 			internal:
 				ALfloat* ToALfloatPtr();
 				static Vector FromFloatPtr(float* f);

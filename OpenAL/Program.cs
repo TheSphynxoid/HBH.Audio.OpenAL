@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using HBH.Audio.OpenAL;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace OpenAL
 {
@@ -13,38 +16,24 @@ namespace OpenAL
         static void Main(string[] args)
         {
             #region Test1
-            Device d = Device.OpenDevice(string.Empty);
-            Context c = new Context(d, new ContextAttributes[3] { ContextAttributes.Frequancy , ContextAttributes.Refresh , ContextAttributes.Sync }
-            , new int[3] { 44100 , 60 , 1 });
-            c.MakeContextCurrent();
-            Console.WriteLine(Device.GetAllDevicesNames()[0]);
-            Source[] srcs = new Source[0];
-            Source.GenerateSources(2, ref srcs);
-            HBH.Audio.OpenAL.Buffer[] bufs = new HBH.Audio.OpenAL.Buffer[0];
-            HBH.Audio.OpenAL.Buffer.GenerateBuffers(2, ref bufs);
+            //Console.WriteLine(".Wav File Path");
+            //Console.ReadLine();
             System.IO.FileStream fs = System.IO.File.Open("Something.wav", System.IO.FileMode.Open);
             var r = HBH.Audio.IO.Wave.ReadRiff(fs);
-            Console.WriteLine(r.Size);
+            Console.WriteLine("File Size : " + r.Size + " Bytes");
             var fmt = HBH.Audio.IO.Wave.ReadFMT(fs);
-            Console.WriteLine(fmt.Size);
-            Console.WriteLine(Listener.Position.ToString());
-            HBH.Audio.IO.Wave.DATAChunk[] ds;
-            HBH.Audio.IO.Wave.ReadChannelData(fs, fmt, out ds);
-            bufs[0].FillData(BufferFormats.Mono16, ds[0].DataToPtr(), ds[0].Size, fmt.SampleRate);
-            bufs[1].FillData(BufferFormats.Mono16, ds[1].DataToPtr(), ds[1].Size, fmt.SampleRate);
-            srcs[0].AttachBuffer(bufs[0]);
-            srcs[1].AttachBuffer(bufs[1]);
-            srcs[0].MaxDistance = 10;
-            srcs[1].MaxDistance = 10;
-            Console.WriteLine(srcs[0].MaxDistance);
-            Source.PlayAsync(2, srcs);
-            Thread.Sleep(1000 * 3);
-            Console.WriteLine("Phase 2");
-            srcs[0].Position = new Vector(5, 0, 0); 
-            srcs[1].Position = new Vector(-5, 0, 0);
-            while (srcs[0].SourceState == SourceState.Playing) ;
-            c.Dispose();
-            Console.ReadLine();
+            Device device = Device.OpenDevice(string.Empty);
+            Context context = new Context(device, new ContextAttributes[1] { ContextAttributes.Refresh }, new int[1] { 60 });
+            context.MakeContextCurrent();
+            Source source = new Source();
+            HBH.Audio.OpenAL.Buffer buffer = new HBH.Audio.OpenAL.Buffer();
+            var data = HBH.Audio.IO.Wave.ReadData(fs);
+            Console.WriteLine("Length : " + ((float)data.Size) / fmt.ByteRate / 60);
+            buffer.FillData(GetBufferFormats(fmt), data.DataToPtr(), data.Size, fmt.SampleRate);
+            source.AttachBuffer(buffer);
+            source.PlayAsync();
+            Console.WriteLine("Done");
+            Console.Read();
             #endregion
             #region test2
             //Device d = Device.OpenCaptureDevice(null, 44100, BufferFormats.Mono16, 882000);
@@ -80,8 +69,7 @@ namespace OpenAL
             //Console.ReadLine();
             #endregion
         }
-
-        public BufferFormats GetBufferFormats(HBH.Audio.IO.Wave.FMTChunk fmt)
+        public static BufferFormats GetBufferFormats(HBH.Audio.IO.Wave.FMTChunk fmt)
         {
             if (fmt.NumChannels == 1)
             {

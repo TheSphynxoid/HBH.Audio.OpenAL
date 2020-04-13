@@ -4,6 +4,9 @@
 namespace HBH {
 	namespace Audio {
 		namespace OpenAL {
+
+			ref class AuxiliaryEffectSlot;
+
 			public enum class SourceType : int
 			{
 				Undetermined = AL_UNDETERMINED,
@@ -375,6 +378,10 @@ namespace HBH {
 				///</summary>
 				void QueueBuffers(unsigned int number, array<HBH::Audio::OpenAL::Buffer^>^ buf);
 				///<summary>
+				///Queues One Buffer to the source.
+				///</summary>
+				void QueueBuffer(Buffer^ buf);
+				///<summary>
 				///This function unqueues a set of buffers attached to a source. 
 				///</summary>
 				void UnQueueBuffers(unsigned int number, array<HBH::Audio::OpenAL::Buffer^>^ buf);
@@ -386,8 +393,20 @@ namespace HBH {
 				///This function deletes one or more sources.
 				///</summary>
 				static void DeleteSources(unsigned int number, array<Source^>^ src);
+				///<summary>
+				///Checks whether the source is valid or not.
+				///</summary>
 				static bool IsSource(Source^ src);
+				///<summary>
+				///Checks whether the source is valid or not.
+				///</summary>
 				static bool IsSource(unsigned int srcname);
+
+				//Extentions
+				///<summary>
+				///This is used to establish connections between Sources and Auxiliary Effect Slots.(Implement Filter Class and Parameter)
+				///</summary>
+				void SetAuxiliarySend(AuxiliaryEffectSlot^ effect, int SendNumber);
 			internal:
 				Source(unsigned int src);
 				unsigned int srcname;
