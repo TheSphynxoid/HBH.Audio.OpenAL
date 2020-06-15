@@ -26,7 +26,7 @@ namespace HBH {
 			/// <summary>
 			/// A Class That defines Function do manipulate sources.
 			/// </summary>
-			public ref class Source
+			public ref class Source sealed
 			{
 			public:
 				//Floats

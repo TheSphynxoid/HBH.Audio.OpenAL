@@ -77,6 +77,8 @@ namespace HBH {
 				/// Buffers which are attached to a source can not be deleted.
 				///</summary>
 				static void DeleteBuffers(unsigned int number, array<Buffer^>^ buffs);
+
+				static BufferFormats GetBufferFormat(unsigned int numchannels);
 			internal:
 				unsigned int Buffername;
 			};
